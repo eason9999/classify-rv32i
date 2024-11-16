@@ -59,11 +59,23 @@ write_matrix:
     jal fwrite
 
     li t0, 2
+    li s4, 0
     bne a0, t0, fwrite_error
 
-    # mul s4, s2, s3   # s4 = total elements
-    # FIXME: Replace 'mul' with your own implementation
+multiply_loop:
+    beq s3, x0, multiply_end    # If s3 == 0, jump to the end of the loop
 
+    andi t2, s3, 1              # Check the least significant bit of s3
+    beq t2, x0, skip_add        # If the least significant bit is 0, skip addition
+
+    add s4, s4, s2              # Add s2 to the result stored in s4
+
+skip_add:
+    slli s2, s2, 1              # Left shift s2 by one bit (equivalent to multiplying by 2)
+    srli s3, s3, 1              # Right shift s3 by one bit (equivalent to dividing by 2)
+    j multiply_loop             # Jump back to the beginning of the loop
+
+multiply_end:
     # write matrix data to file
     mv a0, s0
     mv a1, s1        # matrix data pointer

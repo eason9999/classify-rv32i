@@ -21,7 +21,12 @@ abs:
     lw t0 0(a0)
     bge t0, zero, done
 
-    # TODO: Add your own implementation
+     # If t0 < 0, take the absolute value by calculating -t0
+    li t1, 0          # Load 0 into t1
+    sub t0, t1, t0    # t0 = 0 - t0 (negate t0)
+
+    # Store the absolute value back into memory
+    sw t0, 0(a0)
 
 done:
     # Epilogue

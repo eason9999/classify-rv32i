@@ -23,14 +23,30 @@
 # =================================================================
 argmax:
     li t6, 1
-    blt a1, t6, handle_error
+    blt a1, t6, handle_error   
 
-    lw t0, 0(a0)
+    lw t0, 0(a0)  #max value
 
-    li t1, 0
-    li t2, 1
+    li t1, 0      #max_index
+    li t2, 0      #now position
 loop_start:
     # TODO: Add your own implementation
+    # Assume t3 is tmp
+    addi a1, a1, -1          #i--
+    blt a1, t6, loop_end     #if i < 1 (a1),exit loop
+    
+    addi a0, a0, 4           #a[i+1] = a[i] + offset
+    lw   t3, 0(a0)           #load the number of a[i+1]
+    addi t2, t2, 1            
+    bgt  t0, t3, loop_start   #if max>a[i] , keep loop
+    mv   t0, t3               # Else max=a[i]
+    mv   t1, t2               # max_index = now_index 
+    
+    j   loop_start
+    
+loop_end:
+   mv a0, t1
+   jr ra
 
 handle_error:
     li a0, 36

@@ -28,7 +28,27 @@ relu:
     li t1, 0             
 
 loop_start:
-    # TODO: Add your own implementation
+    # Check if we have reached the end of the array
+    bge t1, a1, done        # If t1 >= a1, jump to done (end of loop)
+
+    # Load current array element
+    slli t2, t1, 2          # Calculate offset (t1 * 4)
+    add t3, a0, t2          # Calculate the address of the current element (a0 + offset)
+    lw t4, 0(t3)            # Load the value at the calculated address into t4
+
+    # Apply ReLU (if the value is less than 0, set it to 0)
+    bge t4, zero, skip_relu # If t4 >= 0, skip to the next iteration
+    li t4, 0                # Set t4 to 0 if it is less than 0
+    sw t4, 0(t3)            # Store the modified value back to the array
+
+skip_relu:
+    # Increment the index and continue the loop
+    addi t1, t1, 1          # Increment t1 by 1
+    j loop_start            # Jump back to the start of the loop
+
+done:
+    # Return to the caller
+    jr ra
 
 error:
     li a0, 36          

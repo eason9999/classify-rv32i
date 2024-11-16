@@ -166,7 +166,21 @@ classify:
     
     lw t0, 0(s3)
     lw t1, 0(s8)
-    # mul a0, t0, t1 # FIXME: Replace 'mul' with your own implementation
+    li a0, 0
+multiply_loop_0:
+    beq t1, x0, multiply_end_0    # If t1 == 0, jump to the end of the loop
+
+    andi t2, t1, 1              # Check the least significant bit of t1
+    beq t2, x0, skip_add_0        # If the least significant bit is 0, skip addition
+
+    add a0, a0, t0              # Add t0 to the result stored in a0
+
+skip_add_0:
+    slli t0, t0, 1              # Left shift t0 by one bit (equivalent to multiplying by 2)
+    srli t1, t1, 1              # Right shift t1 by one bit (equivalent to dividing by 2)
+    j multiply_loop_0             # Jump back to the beginning of the loop
+
+multiply_end_0:
     slli a0, a0, 2
     jal malloc 
     beq a0, x0, error_malloc
@@ -203,9 +217,21 @@ classify:
     mv a0, s9 # move h to the first argument
     lw t0, 0(s3)
     lw t1, 0(s8)
-    # mul a1, t0, t1 # length of h array and set it as second argument
-    # FIXME: Replace 'mul' with your own implementation
-    
+    li a1, 0
+multiply_loop_1:
+    beq t1, x0, multiply_end_1    # If t1 == 0, jump to the end of the loop
+
+    andi t2, t1, 1              # Check the least significant bit of t1
+    beq t2, x0, skip_add_1        # If the least significant bit is 0, skip addition
+
+    add a1, a1, t0              # Add t0 to the result stored in a1
+
+skip_add_1:
+    slli t0, t0, 1              # Left shift t0 by one bit (equivalent to multiplying by 2)
+    srli t1, t1, 1              # Right shift t1 by one bit (equivalent to dividing by 2)
+    j multiply_loop_1             # Jump back to the beginning of the loop
+
+multiply_end_1:
     jal relu
     
     lw a0, 0(sp)
@@ -226,6 +252,20 @@ classify:
     
     lw t0, 0(s3)
     lw t1, 0(s6)
+    li a0, 0
+multiply_loop_2:
+    beq t1, x0, multiply_end_2    # If t1 == 0, jump to the end of the loop
+
+    andi t2, t1, 1              # Check the least significant bit of t1
+    beq t2, x0, skip_add_2        # If the least significant bit is 0, skip addition
+    add a0, a0, t0              # Add t0 to the result stored in a0
+
+skip_add_2:
+    slli t0, t0, 1              # Left shift t0 by one bit (equivalent to multiplying by 2)
+    srli t1, t1, 1              # Right shift t1 by one bit (equivalent to dividing by 2)
+    j multiply_loop_2            # Jump back to the beginning of the loop
+
+multiply_end_2:
     # mul a0, t0, t1 # FIXME: Replace 'mul' with your own implementation
     slli a0, a0, 2
     jal malloc 
@@ -286,7 +326,22 @@ classify:
     mv a0, s10 # load o array into first arg
     lw t0, 0(s3)
     lw t1, 0(s6)
-    mul a1, t0, t1 # load length of array into second arg
+    li a1, 0
+multiply_loop_3:
+    beq t1, x0, multiply_end_3    # If t1 == 0, jump to the end of the loop
+
+    andi t2, t1, 1              # Check the least significant bit of t1
+    beq t2, x0, skip_add_3        # If the least significant bit is 0, skip addition
+
+    add a1, a1, t0              # Add t0 to the result stored in a1
+
+skip_add_3:
+    slli t0, t0, 1              # Left shift t0 by one bit (equivalent to multiplying by 2)
+    srli t1, t1, 1              # Right shift t1 by one bit (equivalent to dividing by 2)
+    j multiply_loop_3             # Jump back to the beginning of the loop
+
+multiply_end_3:
+    #mul a1, t0, t1 # load length of array into second arg
     # FIXME: Replace 'mul' with your own implementation
     
     jal argmax

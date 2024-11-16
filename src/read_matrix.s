@@ -73,9 +73,21 @@ read_matrix:
 
     sw t1, 0(s3)     # saves num rows
     sw t2, 0(s4)     # saves num cols
+    li s1, 0
+multiply_loop:
+    beq t2, x0, multiply_end    # If t2 == 0, jump to the end of the loop
 
-    # mul s1, t1, t2   # s1 is number of elements
-    # FIXME: Replace 'mul' with your own implementation
+    andi t3, t2, 1              # Check the least significant bit of t2 and the result stored in t3
+    beq t3, x0, skip_add        # If the least significant bit is 0, skip addition
+
+    add s1, s1, t1              # Add t1 to the result stored in s1
+
+skip_add:
+    slli t1, t1, 1              # Left shift t1 by one bit (equivalent to multiplying by 2)
+    srli t2, t2, 1              # Right shift t2 by one bit (equivalent to dividing by 2)
+    j multiply_loop             # Jump back to the beginning of the loop
+
+multiply_end:
 
     slli t3, s1, 2
     sw t3, 24(sp)    # size in bytes
